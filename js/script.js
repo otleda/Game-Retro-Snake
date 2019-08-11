@@ -55,9 +55,11 @@ function keyDown(event) {
 
 // Screens
 function touchStart(event) {
-  event.preventDefault();
+  //event.preventDefault();
   let touch = event.touches[0];
   globalTouch = [touch.pageX, touch.pageY];
+
+  playing = true;
 }
 function touchMove(event) {
    let touch = event.touches[0];
@@ -105,15 +107,22 @@ function PlayLabel() {
   };
 
   if(isMobileDevice()) {
-    
+
+    if(this.messages.landscape) {
+      this.text = this.messages.landscape;
+    } 
+    else if (this.messages.portrait) {
+      this.text = this.messages.portrait;
+    }
+
   } else {
     this.text = this.messages.pc;
   }
+
   this.drawPlayLabel = function() {
     context.fillStyle = this.color;
-    context.font = tileSize * 2 + "px Arial";
+    context.font = tileSize + "px Arial";
     context.fillText(this.text, WIDTH / 2 - context.measureText(this.text).width / 2, HEIGHT / 2);
-
   }
 }
 
@@ -123,6 +132,8 @@ function Snake() {
   this.body = [[10,10], [10,11], [10,12]];
   this.color = "gray";
   this.direction = [0, -1];
+
+  this.apple;
   
   // Methods
   this.update = ()=> {
@@ -133,7 +144,6 @@ function Snake() {
 
     //S tandby
     if(!playing) {
-
       if (this.direction[1] == -1 && nextPosition[1] <= (HEIGHT * 0.1 / tileSize)) { 
         this.direction = [1, 0]; // right
       }
